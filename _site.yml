@@ -1,4 +1,5 @@
 name: "Literature programming"
+output_dir: "Docs"
 navbar:
   title: "Литературное программирование"
   left:
