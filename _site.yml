@@ -1,0 +1,8 @@
+name: "Literature programming"
+navbar:
+  title: "Литературное программирование"
+  left:
+    - text: "Главная"
+      href: index.html
+    - text: "О проекте"
+      href: about.html
