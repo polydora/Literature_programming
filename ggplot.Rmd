@@ -1,0 +1,14 @@
+---
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Построение графиков с помощью языка `R`
+
+- [Презентация](intro_ggplot.html)
+- [Код для практической работы](intro_ggplot.R)
+- [Данные для практической работы](data/fev.xls)
+

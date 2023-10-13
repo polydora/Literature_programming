@@ -1,0 +1,13 @@
+---
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Основы языка `R`
+
+- [Презентация](Introduction_R.pdf)
+- [Практикум: Первые шаги в *R*](01_intro_to_r.html)
+<!-- - [Самостоятельная работа для закрепления пройденного](01_intro_to_r_practice.html) -->

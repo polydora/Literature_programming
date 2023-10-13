@@ -1,9 +1,27 @@
 name: "Literature programming"
-output_dir: "Docs"
+output_dir: "."
 navbar:
   title: "Литературное программирование"
   left:
     - text: "Главная"
       href: index.html
+    - text: "Tidy Data"
+      href: data_preparation.html
+    - text: "Основы R"
+      href: Intro_to_R.html
+    - text: "Построение графиков"
+      href: ggplot.html
+    - text: "Создание документов"
+      href: rmarkdown.html      
     - text: "О проекте"
       href: about.html
+output:
+  html_document:
+    theme: flatly
+    toc: true
+    toc_float:
+      collapsed: true
+    highlight: haddock
+    include:
+      after_body: 
+    css: my_styles.css

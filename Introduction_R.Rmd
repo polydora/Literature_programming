@@ -1,0 +1,550 @@
+---
+title: |
+  | Знакомство с R
+author: |
+  | М.А. Варфоломеева, PhD
+  | В.М. Хайтов, к.б.н.
+fontsize: 10pt
+classoption: 'aspectratio=169,t,xcolor=table'
+language: russian, english
+output:
+  beamer_presentation:
+    theme: default
+    colortheme: beaver
+    latex_engine: xelatex
+    slide_level: 2
+    fig_crop: false
+    highlight: haddock
+    includes:
+      in_header: 
+        - includes/header.tex
+        - includes/header-with-code.tex
+    keep_tex: false
+---
+```{r setup, include=FALSE, cache=FALSE, purl=FALSE}
+# output options
+options(width = 90)
+library (knitr)
+library (scales)
+# chunk default options
+opts_chunk$set(fig.show='hold', size='footnotesize', comment='#', 
+               fig.width=4.5, out.width='3in',
+               fig.height=2.25, out.height='1.5in',
+               cache=FALSE,
+               dev='cairo_pdf',
+               warning=FALSE, message=FALSE)
+# Тема для иллюстраций
+library (ggplot2)
+library (gridExtra)
+theme_spbu <- function () { 
+    theme_bw(base_size = 11, base_family='GT Eesti Pro Display') + 
+    theme(plot.title = element_text(face = 'bold', colour = '#1e1e1e'), 
+          panel.border = element_rect(fill = NA, size = 0.75), 
+          panel.grid = element_blank(),
+          strip.background = element_blank(), 
+          strip.text = element_text(face = 'bold', colour = '#1e1e1e'))
+}
+op <- par()
+par_spbu <- par(
+    mar = c(3, 3, 2, 0.5), # Dist' from plot to side of page
+    mgp = c(2, 0.4, 0), # Dist' plot to label
+    las = 1, # Rotate y-axis text
+    tck = -.01, # Reduce tick length
+    xaxs = 'i', yaxs = 'i', 
+    family = 'GT Eesti Pro Display',
+    mex = 0.8,
+    mgp = c(2, .5, 0),
+    tcl = -0.3) # Remove plot padding
+source(file = 'includes/spbu_cols.R')
+source(file = 'includes/functions.R')
+```
+
+## Почему `R` это круто?  {.segue}
+
+М.А. Варфоломеева, PhD  
+В.М. Хайтов, к.б.н.
+
+\insertinstitute
+
+## Новые впечатления и сообщество единомышленников
+
+\columnsbegin
+\column{0.49\textwidth}
+
+\includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{images/stock-photo-businessman-touching-global-network-and-data-exchanges-over-the-world-d-rendering-566877226.jpg}
+
+\tiny{https://www.shutterstock.com/ru/image-photo/businessman-touching-global-network-data-exchanges-566877226}
+
+\column{0.49 \textwidth}
+
+- `R` --- это инструмент познания мира.  
+Вы получите много новых впечатлений и встретите большое и дружественное сообщество единомышленников.
+
+\columnsend
+
+
+## Огромный набор методов
+
+\columnsbegin
+\column{0.49\textwidth}
+
+\includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{images/stock-photo-business-person-analyzing-financial-statistics-displayed-on-the-tablet-screen-184490210.jpg}
+
+\column{0.49\textwidth}
+
+- `R` --- это открытый кросс-платформенный язык статистического программирования. 
+- В `R` реализованы практически все статистические методы, как классические, так и ультрасовременные.
+- Доступно более 10 000 пакетов и их число растет. К пакетам есть подробные и понятные справки.
+
+\columnsend
+
+
+## Визуализация данных
+
+\columnsbegin
+\column{0.7\textwidth}
+
+\includegraphics[width=\textwidth,height=0.8\textheight,keepaspectratio]{images/ggplot_examples.png}
+
+```{r purl=FALSE, eval=FALSE, echo=FALSE, fig.width=4.05, out.width='2.7in', fig.height=3, out.height='2in'}
+# \small
+# График вдохновлен картиной \href{https://www.r-graph-gallery.com/137-spring-shapes-data-art/}{\#137 SPRING SHAPES} с сайта \href{r-graph-gallery.com}{R-graph-gallery.com}.
+set.seed(23854)
+library(ggplot2)
+library(RColorBrewer)
+n_group <- 25
+names <- paste("Group_", 1:n_group, sep = "")
+dfr <- data.frame()
+
+for(i in seq(1:10)){
+  dat <- data.frame( matrix(0, n_group , 3))
+  dat[,1] <- i
+  dat[,2] <- sample(names, nrow(dat))
+  dat[,3] <- prop.table(sample(c(rep(0, 100), 1:n_group), nrow(dat)))
+  dfr <- rbind(dfr, dat)
+}
+colnames(dfr) <- c("Year", "Group", "Value")
+df <- dfr[order( dfr$Year, dfr$Group) , ]
+
+pal <- brewer.pal(9, "YlGnBu")
+pal <- colorRampPalette(pal)(n_group)
+pal <- pal[sample(length(pal), size = length(pal))]
+
+ggplot(dfr, aes(x = Year, y = Value, fill = Group )) +
+  geom_area() +
+  scale_fill_manual(values = pal) +
+  theme_void() + theme(legend.position = 'none')
+```
+
+\column{0.3\textwidth}
+
+В `R` можно создавать практически любые иллюстрации:
+
+- графики
+- карты
+- сложные комбинированные рисунки
+
+\tiny
+
+https://timogrossenbacher.ch/2016/12/beautiful-thematic-maps-with-ggplot2-only/
+
+http://www.ggplot2-exts.org/gallery/
+
+Khaitov et al, 2018
+
+\columnsend
+
+
+## Гибкий и воспроизводимый код для анализа данных
+
+
+\columnsbegin
+\column{0.49\textwidth}
+
+\includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{images/stock-photo-toy-a-magician-casting-a-spell-it-s-a-toy-it-is-not-a-person-425596252.jpg}
+
+\tiny{https://www.shutterstock.com/ru/image-photo/toy-magician-casting-spell-not-person-425596252?src=9JFUp7OtjFojD9EEo8ZPfQ-1-18}
+
+\column{0.49\textwidth}
+
+- Функции языка `R` подобны магическим заклинаниям, они совершают чудеса при обработке данных.
+- Ход анализа данных может быть задокументирован. Вы напишете собственные магические тексты в виде кода на `R`, с помощью которого можно воспроизвести все этапы анализа. 
+
+\columnsend
+
+
+## Установка и настройка `R` и `RStudio`  {.segue}
+
+В.М. Хайтов, к.б.н.
+
+\insertinstitute
+
+## Загрузка `R` 
+Сайт `CRAN`
+https://cran.r-project.org/
+
+\includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{images/R_download_all.png}
+
+## Загрузка `RStudio`
+
+https://www.rstudio.com/products/rstudio/download/
+
+\includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{images/RStudio_download.png}
+
+## Начальный вид окон `RStudio`
+
+Сразу после открытия создаем окно для скрипта: File -> New File -> R Script
+
+\includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{images/RStudio_initial_view.png}
+
+## Четыре основных окна `RStudio`
+
+\includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{images/RStudio_windows.png}
+
+## Вид окон во время работы
+
+\includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{images/RStudio_work.png}
+
+## Важные настройки `RStudio`
+
+\includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{images/RStudio_adjustment_1.png}
+
+## Настройка окна скрипта
+
+\includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{images/RStudio_adjustment_2.png}
+
+
+## Перенос в отображении длинных строк
+
+\columnsbegin
+\column{0.49\textwidth}
+
+\includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{images/RStudio_adjustment_3.png}
+
+\column{0.49\textwidth}
+
+Ставим галочку рядом с опцией
+
+Soft-wrap R source files
+
+\columnsend
+
+## Вид `RStudio` по своему вкусу 
+
+\columnsbegin
+\column{0.49\textwidth}
+
+\includegraphics[width=\textwidth,height=0.6\textheight,keepaspectratio]{images/RStudio_appearance.png}
+
+\column{0.49\textwidth}
+
+Tools -> Global options -> Appearance
+
+\columnsend
+
+## Организация рабочего пространства  {.segue}
+
+В.М. Хайтов, к.б.н.
+
+\insertinstitute
+
+
+## До начала работы 
+
+1. Создайте папку, где будут храниться ВСЕ материалы этого курса. Эта папка будет нашей __рабочей директорией__.
+
+Например:
+
+`D:\Literature_programming\`
+
+В эту папку помещайте ВСЕ файлы со скриптами. 
+
+Отсюда же запускайте эти файлы из проводника или иного файл-менеджера.
+
+
+2. Внутри папки `Literature_programming` создайте папку `data`.
+ 
+В нее помещайте все файлы с данными для анализа.
+
+`D:\Literature_programming\data\`
+
+## Открываем готовый скрипт
+
+Скачайте с сайта файл `first_steps.R` и поместите его в рабочую директорию. 
+
+Откройте этот скрипт в `RStudio`
+
+File ->  Open File 
+
+
+## Кракозябры вместо русских букв? 
+
+Нужно поменять кодировку
+
+File -> Reopen with Encoding
+
+Из предложенного списка выберете UTF-8. 
+
+В том же окне поставьте галочку `"Save as default encoding for source files"`
+
+
+## Рабочая директория
+
+`R` всегда "нацелен" на определенную папку в вашей операционной системе --- эта папка называется __рабочая директория__.
+
+Это удобно: все файлы рабочей директории можно открыть, указав путь не от корневрй папки системы, а от этой рабочей директории. Это называется __относительный путь__.
+
+## Проверка пути к рабочей директории
+
+По умолчанию `R` считает, что рабочая директория --- это основная пользовательская папка в вашей системе.
+
+Для проверки правильности установки рабочей директории в окне скрипта выполните команду `getwd()` (get work directory).
+
+```{r, eval=FALSE}
+getwd()
+```
+
+Для этого поставьте текстовый курсор на строчку с этой командой и нажмите `Ctrl + Enter`.
+
+
+## Установка пути к рабочей директории
+
+Допустим, нашей рабочей директорией должна быть `D:\Coursera\Linmodr`
+
+\vspace{\baselineskip}
+
+Способ 1:
+
+Выберите в меню Session -> Set working Directory -> Choose Directory...
+
+\vspace{\baselineskip}
+
+Способ 2:
+
+Используем команду `setwd()`
+
+```{r, eval=FALSE}
+setwd('D:/Coursera/Linmodr/')
+```
+
+
+## Как получить помощь  {.segue}
+
+В.М. Хайтов, к.б.н.
+
+\insertinstitute
+
+## Просить помощи --- это нормально
+
+\columnsbegin
+\column{0.48\textwidth}
+
+\includegraphics[width=\textwidth,height=0.6\textheight,keepaspectratio]{images/stock-photo-woman-drowns-in-the-sea-698646385.jpg}
+
+\tiny{https://www.shutterstock.com/ru/image-photo/woman-drowns-sea-698646385}
+
+\column{0.48 \textwidth}
+
+Работая в среде `R`, необходимо постоянно обращаться за помощью.   
+
+\vspace{\baselineskip}
+
+Три основных способа получения помощи:
+
+- Локальная справка `R`
+- Google
+- Stack Overflow
+
+\columnsend
+
+## Локальная справка `R`
+
+Предположим, вам необходимо получить справку по функции `log()`
+
+```{r, eval=FALSE}
+?log      # Вызов справки через "?"
+
+help(log) # Вызов справки с помощью функции help()
+
+```
+
+То же самое можно сделать, если поставить текстовый курсор на название функции и нажать "F1".
+
+## Окно справки 
+
+\columnsbegin
+\column{0.49\textwidth}
+
+\includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{images/help_1.png}
+
+
+\column{0.49\textwidth}
+
+Разделы:
+
+- Description --- общее описание функции 
+- Usage --- шаблон использования функции
+- Arguments --- аргументы (параметры) функции
+- Details --- Дополнительные детали
+
+\columnsend
+
+
+## Окно справки 
+
+\columnsbegin
+\column{0.49\textwidth}
+
+\includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{images/help_2.png}
+
+\column{0.49\textwidth}
+
+Разделы:
+
+- Value --- результаты работы функции
+- References --- ссылки на первоисточники
+- See Also --- похожие функции
+- Examples --- примеры использования функции
+
+\columnsend
+
+## Код из раздела `Examples` можно выполнять
+
+Строки из раздела "Examples" можно скопировать в буфер обмена, \newline вставить в скрипт и выполнить.
+
+```{r}
+log(exp(3))
+log10(1e7) # = 7
+```
+
+Форма записи чисел $1e7 = 1 \cdot 10^7$ --- это так называемая экспоненциальная запись \newline (scientific notation).
+
+
+## Google --- ваш лучший друг
+
+\includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{images/help_google.png}
+
+
+## Cообщество Stack Overflow
+
+\includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{images/help_stackoverflow.png}
+
+
+## Cообщество Stack Overflow
+
+\includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{images/help_stackoverflow_2.png}
+
+
+## `RStudio` может подсказывать и сама
+
+\columnsbegin
+\column{0.49\textwidth}
+
+\includegraphics[width=\textwidth,height=0.6\textheight,keepaspectratio]{images/help_tab.png}
+
+\column{0.49\textwidth}
+
+Начните набирать название функции \newline и нажмите `Tab` или `Ctrl + Space`.
+
+\columnsend
+
+## Не бойтесь сообщений об ошибках и предупреждений
+
+Разобраться в них обычно удается даже при минимальном знании английского языка. 
+
+
+```{r, eval=FALSE}
+sqr(4) 
+```
+```
+Error in sqr(4) : could not find function "sqr"
+```
+
+```{r, eval=FALSE}
+sqrt(-1) 
+```
+
+```
+[1] NaN
+Warning message:
+In sqrt(-1) : NaNs produced
+```
+
+## Что делать, если консоль неистово плюсует
+
+Знак `+` в консоли значит, что во введенной команде чего-то не хватает, \newline и `R` ожидает продолжения. 
+
+Один из самых частых случаев --- потерялась закрывающая скобка.
+
+```
+> sqrt(4
++
++
++
++
+```
+
+Для выхода из этого положения нажмите `Esc`.
+
+
+## Установка пакетов  {.segue}
+
+В.М.Хайтов, к.б.н.
+
+\insertinstitute
+
+## Что такое пакеты
+
+Пакет - набор функций, предназначенных для решения определенного класса задач.
+
+Примеры пакетов:
+
+- `ggplot2` --- набор функций для рисования графиков
+- `dplyr`, `tidyr` --- средства управления данными и их преобразования в удобную форму
+- `car`, `MASS`, `lmer` --- инструменты регрессионного анализа
+
+## Установка пакетов
+
+Установка пакетов происходит из Сети. Лучше работать, имея постоянное подключение.
+
+Главный репозиторий находится на сайте `CRAN` (https://cran.r-project.org/).
+
+Если вы работаете под Windows, то запускайте `RStudio` от имени администратора.
+
+
+## Выбор зеркала
+
+\columnsbegin
+\column{0.49\textwidth}
+
+\includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{images/RStudio_adjustment_CRAN.png}
+
+\column{0.49\textwidth}
+
+Из множества зеркал `CRAN` лучше выбрать ближайшее к вам.
+
+Tools -> Global options -> Packages -> CRAN mirror
+
+\columnsend
+
+## Установка пакетов в `R`
+
+```{r, eval=FALSE}
+install.packages('ggplot2') # Устанавливаем пакет ggplot2 
+install.packages('tidyr')   # Устанавливаем пакет tidyr 
+```
+
+Пакеты достаточно один раз установить в локальную библиотеку.
+
+Команда `library()` активирует нужный пакет, если он уже установлен, \newline и выполняется один раз за сеанс работы в R.
+
+```{r, eval=FALSE}
+library(ggplot2) # Активируем пакет ggplot2
+```
+
+
+## Список установленных пакетов
+
+\includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{images/RStudio_adjustment_Packages.png}
+
+----
