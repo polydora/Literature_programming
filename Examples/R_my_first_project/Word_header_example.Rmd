@@ -1,0 +1,13 @@
+---
+title: "Sear Stars *Asterias rubens* L. feed preferably on *Mytilus trossulus* Gould in mixed stocks of *M. trossulus* and *M. edulis* L."
+author: "Vadim Khaitov, Anna Makarycheva, Michail Gantsevitch, Natalia Lentsman, Marya Skazina, Marina Katolikova, Peter Strelkov"
+date: ""
+output:
+  word_document:
+    reference_docx: article_template.docx
+    fig_width: 5
+    fig_height: 5
+bibliography: Bibliografy.bib
+csl: marine-biology.csl
+
+---
