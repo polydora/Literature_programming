@@ -1,0 +1,90 @@
+---
+title: "Изучение веса младенцев"
+author: "В. М. Хайтов"
+date: "`r Sys.Date()`"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+## Введение
+Вес младенцев  - проблема. Мы ее изучим.
+
+## Зависимость веса младенцев возраста матери
+
+### Визуализация
+
+```{r}
+library(MASS)
+
+baby <- birthwt
+
+baby$smoke <- factor(baby$smoke, labels = c("Non-smoker", "Smoker"))
+
+library(ggplot2)
+
+Pl1 <-
+ggplot(baby, aes(x = age, y = bwt)) +
+  geom_point(aes(color = smoke), shape = 17, size = 3) +
+  scale_color_manual(values = c("red", "blue")) +
+  facet_wrap(~smoke)
+
+
+```
+
+### Какую закономерность наблюдаем
+
+Закономерности не очевидны. Надо построить график другого типа.
+
+ДАвайте попробуем построить график в виде боксплота.
+
+```{r}
+Pl2<-
+ggplot(baby, aes(x = smoke, y = bwt))+
+  geom_boxplot()
+
+```
+
+
+```{r}
+library(cowplot)
+library(patchwork)
+
+
+Pl1 / Pl2 #из пакета patchwork
+
+
+plot_grid(Pl1, Pl2, nrow = 2, scale = c(1, 0.8), labels = c("d","G"))
+
+```
+
+
+
+```{r}
+ggplot(baby, aes(x = bwt)) +
+  geom_histogram(aes(fill = smoke), binwidth = 500) +
+  facet_wrap(~smoke, nrow = 2) +
+  theme_bw()
+```
+
+
+
+## Среднее значение веса младенцев у матерей с разным статусом относительно курения
+
+```{r}
+library(dplyr)
+
+baby %>% 
+  group_by(smoke) %>% 
+  summarise(Mean_bwt = mean(bwt), SD_bwt = sd(bwt)) %>% 
+  ggplot(., aes(x = smoke, y = Mean_bwt)) +
+  geom_col(fill = "gray", color = "black") +
+  geom_errorbar(aes(ymin = Mean_bwt - SD_bwt, ymax = Mean_bwt + SD_bwt), width = 0.2)
+
+
+```
+
+
+
