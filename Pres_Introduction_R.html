@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Pres_Introduction_R.knit</title>
+
+<script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; } /* Alert */
+code span.an { color: #008000; } /* Annotation */
+code span.at { } /* Attribute */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #0000ff; } /* ControlFlow */
+code span.ch { color: #008080; } /* Char */
+code span.cn { } /* Constant */
+code span.co { color: #008000; } /* Comment */
+code span.cv { color: #008000; } /* CommentVar */
+code span.do { color: #008000; } /* Documentation */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.im { } /* Import */
+code span.in { color: #008000; } /* Information */
+code span.kw { color: #0000ff; } /* Keyword */
+code span.op { } /* Operator */
+code span.ot { color: #ff4000; } /* Other */
+code span.pp { color: #ff4000; } /* Preprocessor */
+code span.sc { color: #008080; } /* SpecialChar */
+code span.ss { color: #008080; } /* SpecialString */
+code span.st { color: #008080; } /* String */
+code span.va { } /* Variable */
+code span.vs { color: #008080; } /* VerbatimString */
+code span.wa { color: #008000; font-weight: bold; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<link rel="stylesheet" href="my_styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Литературное программирование</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Главная</a>
+</li>
+<li>
+  <a href="data_preparation.html">Tidy Data</a>
+</li>
+<li>
+  <a href="Intro_to_R.html">Основы R</a>
+</li>
+<li>
+  <a href="ggplot.html">Построение графиков</a>
+</li>
+<li>
+  <a href="rmarkdown_html.html">Создание документов HTML</a>
+</li>
+<li>
+  <a href="rmarkdown_word.html">Создание документов Word</a>
+</li>
+<li>
+  <a href="about.html">О проекте</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore"><div class="line-block">Знакомство с
+R</div></h1>
+<h4 class="author"><div class="line-block">М.А. Варфоломеева, PhD<br />
+В.М. Хайтов, к.б.н.</div></h4>
+
+</div>
+
+
+<div id="почему-r-это-круто" class="section level2 segue">
+<h2 class="segue">Почему <code>R</code> это круто?</h2>
+<p>М.А. Варфоломеева, PhD<br />
+В.М. Хайтов, к.б.н.</p>
+</div>
+<div id="новые-впечатления-и-сообщество-единомышленников"
+class="section level2">
+<h2>Новые впечатления и сообщество единомышленников</h2>
+<p></p>
+<p>{<a
+href="https://www.shutterstock.com/ru/image-photo/businessman-touching-global-network-data-exchanges-566877226"
+class="uri">https://www.shutterstock.com/ru/image-photo/businessman-touching-global-network-data-exchanges-566877226</a>}</p>
+<ul>
+<li><code>R</code> — это инструмент познания мира.<br />
+Вы получите много новых впечатлений и встретите большое и дружественное
+сообщество единомышленников.</li>
+</ul>
+</div>
+<div id="огромный-набор-методов" class="section level2">
+<h2>Огромный набор методов</h2>
+<p></p>
+<ul>
+<li><code>R</code> — это открытый кросс-платформенный язык
+статистического программирования.</li>
+<li>В <code>R</code> реализованы практически все статистические методы,
+как классические, так и ультрасовременные.</li>
+<li>Доступно более 10 000 пакетов и их число растет. К пакетам есть
+подробные и понятные справки.</li>
+</ul>
+</div>
+<div id="визуализация-данных" class="section level2">
+<h2>Визуализация данных</h2>
+<p></p>
+<p>В <code>R</code> можно создавать практически любые иллюстрации:</p>
+<ul>
+<li>графики</li>
+<li>карты</li>
+<li>сложные комбинированные рисунки</li>
+</ul>
+<p><a
+href="https://timogrossenbacher.ch/2016/12/beautiful-thematic-maps-with-ggplot2-only/"
+class="uri">https://timogrossenbacher.ch/2016/12/beautiful-thematic-maps-with-ggplot2-only/</a></p>
+<p><a href="http://www.ggplot2-exts.org/gallery/"
+class="uri">http://www.ggplot2-exts.org/gallery/</a></p>
+<p>Khaitov et al, 2018</p>
+</div>
+<div id="гибкий-и-воспроизводимый-код-для-анализа-данных"
+class="section level2">
+<h2>Гибкий и воспроизводимый код для анализа данных</h2>
+<p></p>
+<p>{<a
+href="https://www.shutterstock.com/ru/image-photo/toy-magician-casting-spell-not-person-425596252?src=9JFUp7OtjFojD9EEo8ZPfQ-1-18"
+class="uri">https://www.shutterstock.com/ru/image-photo/toy-magician-casting-spell-not-person-425596252?src=9JFUp7OtjFojD9EEo8ZPfQ-1-18</a>}</p>
+<ul>
+<li>Функции языка <code>R</code> подобны магическим заклинаниям, они
+совершают чудеса при обработке данных.</li>
+<li>Ход анализа данных может быть задокументирован. Вы напишете
+собственные магические тексты в виде кода на <code>R</code>, с помощью
+которого можно воспроизвести все этапы анализа.</li>
+</ul>
+</div>
+<div id="установка-и-настройка-r-и-rstudio"
+class="section level2 segue">
+<h2 class="segue">Установка и настройка <code>R</code> и
+<code>RStudio</code></h2>
+<p>В.М. Хайтов, к.б.н.</p>
+</div>
+<div id="загрузка-r" class="section level2">
+<h2>Загрузка <code>R</code></h2>
+<p>Сайт <code>CRAN</code> <a href="https://cran.r-project.org/"
+class="uri">https://cran.r-project.org/</a></p>
+<p></p>
+</div>
+<div id="загрузка-rstudio" class="section level2">
+<h2>Загрузка <code>RStudio</code></h2>
+<p><a href="https://www.rstudio.com/products/rstudio/download/"
+class="uri">https://www.rstudio.com/products/rstudio/download/</a></p>
+<p></p>
+</div>
+<div id="начальный-вид-окон-rstudio" class="section level2">
+<h2>Начальный вид окон <code>RStudio</code></h2>
+<p>Сразу после открытия создаем окно для скрипта: File -&gt; New File
+-&gt; R Script</p>
+<p></p>
+</div>
+<div id="четыре-основных-окна-rstudio" class="section level2">
+<h2>Четыре основных окна <code>RStudio</code></h2>
+<p></p>
+</div>
+<div id="вид-окон-во-время-работы" class="section level2">
+<h2>Вид окон во время работы</h2>
+<p></p>
+</div>
+<div id="важные-настройки-rstudio" class="section level2">
+<h2>Важные настройки <code>RStudio</code></h2>
+<p></p>
+</div>
+<div id="настройка-окна-скрипта" class="section level2">
+<h2>Настройка окна скрипта</h2>
+<p></p>
+</div>
+<div id="перенос-в-отображении-длинных-строк" class="section level2">
+<h2>Перенос в отображении длинных строк</h2>
+<p></p>
+<p>Ставим галочку рядом с опцией</p>
+<p>Soft-wrap R source files</p>
+</div>
+<div id="вид-rstudio-по-своему-вкусу" class="section level2">
+<h2>Вид <code>RStudio</code> по своему вкусу</h2>
+<p></p>
+<p>Tools -&gt; Global options -&gt; Appearance</p>
+</div>
+<div id="организация-рабочего-пространства"
+class="section level2 segue">
+<h2 class="segue">Организация рабочего пространства</h2>
+<p>В.М. Хайтов, к.б.н.</p>
+</div>
+<div id="до-начала-работы" class="section level2">
+<h2>До начала работы</h2>
+<ol style="list-style-type: decimal">
+<li>Создайте папку, где будут храниться ВСЕ материалы этого курса. Эта
+папка будет нашей <strong>рабочей директорией</strong>.</li>
+</ol>
+<p>Например:</p>
+<p><code>D:\Literature_programming\</code></p>
+<p>В эту папку помещайте ВСЕ файлы со скриптами.</p>
+<p>Отсюда же запускайте эти файлы из проводника или иного
+файл-менеджера.</p>
+<ol start="2" style="list-style-type: decimal">
+<li>Внутри папки <code>Literature_programming</code> создайте папку
+<code>data</code>.</li>
+</ol>
+<p>В нее помещайте все файлы с данными для анализа.</p>
+<p><code>D:\Literature_programming\data\</code></p>
+</div>
+<div id="открываем-готовый-скрипт" class="section level2">
+<h2>Открываем готовый скрипт</h2>
+<p>Скачайте с сайта файл <code>first_steps.R</code> и поместите его в
+рабочую директорию.</p>
+<p>Откройте этот скрипт в <code>RStudio</code></p>
+<p>File -&gt; Open File</p>
+</div>
+<div id="кракозябры-вместо-русских-букв" class="section level2">
+<h2>Кракозябры вместо русских букв?</h2>
+<p>Нужно поменять кодировку</p>
+<p>File -&gt; Reopen with Encoding</p>
+<p>Из предложенного списка выберете UTF-8.</p>
+<p>В том же окне поставьте галочку
+<code>"Save as default encoding for source files"</code></p>
+</div>
+<div id="рабочая-директория" class="section level2">
+<h2>Рабочая директория</h2>
+<p><code>R</code> всегда “нацелен” на определенную папку в вашей
+операционной системе — эта папка называется <strong>рабочая
+директория</strong>.</p>
+<p>Это удобно: все файлы рабочей директории можно открыть, указав путь
+не от корневрй папки системы, а от этой рабочей директории. Это
+называется <strong>относительный путь</strong>.</p>
+</div>
+<div id="проверка-пути-к-рабочей-директории" class="section level2">
+<h2>Проверка пути к рабочей директории</h2>
+<p>По умолчанию <code>R</code> считает, что рабочая директория — это
+основная пользовательская папка в вашей системе.</p>
+<p>Для проверки правильности установки рабочей директории в окне скрипта
+выполните команду <code>getwd()</code> (get work directory).</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">getwd</span>()</span></code></pre></div>
+<p>Для этого поставьте текстовый курсор на строчку с этой командой и
+нажмите <code>Ctrl + Enter</code>.</p>
+</div>
+<div id="установка-пути-к-рабочей-директории" class="section level2">
+<h2>Установка пути к рабочей директории</h2>
+<p>Допустим, нашей рабочей директорией должна быть
+<code>D:\Coursera\Linmodr</code></p>
+<p>Способ 1:</p>
+<p>Выберите в меню Session -&gt; Set working Directory -&gt; Choose
+Directory…</p>
+<p>Способ 2:</p>
+<p>Используем команду <code>setwd()</code></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">&#39;D:/Coursera/Linmodr/&#39;</span>)</span></code></pre></div>
+</div>
+<div id="как-получить-помощь" class="section level2 segue">
+<h2 class="segue">Как получить помощь</h2>
+<p>В.М. Хайтов, к.б.н.</p>
+</div>
+<div id="просить-помощи-это-нормально" class="section level2">
+<h2>Просить помощи — это нормально</h2>
+<p></p>
+<p>{<a
+href="https://www.shutterstock.com/ru/image-photo/woman-drowns-sea-698646385"
+class="uri">https://www.shutterstock.com/ru/image-photo/woman-drowns-sea-698646385</a>}</p>
+<p>Работая в среде <code>R</code>, необходимо постоянно обращаться за
+помощью.</p>
+<p>Три основных способа получения помощи:</p>
+<ul>
+<li>Локальная справка <code>R</code></li>
+<li>Google</li>
+<li>Stack Overflow</li>
+</ul>
+</div>
+<div id="локальная-справка-r" class="section level2">
+<h2>Локальная справка <code>R</code></h2>
+<p>Предположим, вам необходимо получить справку по функции
+<code>log()</code></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>?log      <span class="co"># Вызов справки через &quot;?&quot;</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="fu">help</span>(log) <span class="co"># Вызов справки с помощью функции help()</span></span></code></pre></div>
+<p>То же самое можно сделать, если поставить текстовый курсор на
+название функции и нажать “F1”.</p>
+</div>
+<div id="окно-справки" class="section level2">
+<h2>Окно справки</h2>
+<p></p>
+<p>Разделы:</p>
+<ul>
+<li>Description — общее описание функции</li>
+<li>Usage — шаблон использования функции</li>
+<li>Arguments — аргументы (параметры) функции</li>
+<li>Details — Дополнительные детали</li>
+</ul>
+</div>
+<div id="окно-справки-1" class="section level2">
+<h2>Окно справки</h2>
+<p></p>
+<p>Разделы:</p>
+<ul>
+<li>Value — результаты работы функции</li>
+<li>References — ссылки на первоисточники</li>
+<li>See Also — похожие функции</li>
+<li>Examples — примеры использования функции</li>
+</ul>
+</div>
+<div id="код-из-раздела-examples-можно-выполнять"
+class="section level2">
+<h2>Код из раздела <code>Examples</code> можно выполнять</h2>
+<p>Строки из раздела “Examples” можно скопировать в буфер обмена,
+вставить в скрипт и выполнить.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">log</span>(<span class="fu">exp</span>(<span class="dv">3</span>))</span></code></pre></div>
+<pre><code># [1] 3</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">log10</span>(<span class="fl">1e7</span>) <span class="co"># = 7</span></span></code></pre></div>
+<pre><code># [1] 7</code></pre>
+<p>Форма записи чисел <span class="math inline">\(1e7 = 1 \cdot
+10^7\)</span> — это так называемая экспоненциальная запись (scientific
+notation).</p>
+</div>
+<div id="google-ваш-лучший-друг" class="section level2">
+<h2>Google — ваш лучший друг</h2>
+<p></p>
+</div>
+<div id="cообщество-stack-overflow" class="section level2">
+<h2>Cообщество Stack Overflow</h2>
+<p></p>
+</div>
+<div id="cообщество-stack-overflow-1" class="section level2">
+<h2>Cообщество Stack Overflow</h2>
+<p></p>
+</div>
+<div id="rstudio-может-подсказывать-и-сама" class="section level2">
+<h2><code>RStudio</code> может подсказывать и сама</h2>
+<p></p>
+<p>Начните набирать название функции и нажмите <code>Tab</code> или
+<code>Ctrl + Space</code>.</p>
+</div>
+<div id="не-бойтесь-сообщений-об-ошибках-и-предупреждений"
+class="section level2">
+<h2>Не бойтесь сообщений об ошибках и предупреждений</h2>
+<p>Разобраться в них обычно удается даже при минимальном знании
+английского языка.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">sqr</span>(<span class="dv">4</span>) </span></code></pre></div>
+<pre><code>Error in sqr(4) : could not find function &quot;sqr&quot;</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="sc">-</span><span class="dv">1</span>) </span></code></pre></div>
+<pre><code>[1] NaN
+Warning message:
+In sqrt(-1) : NaNs produced</code></pre>
+</div>
+<div id="что-делать-если-консоль-неистово-плюсует"
+class="section level2">
+<h2>Что делать, если консоль неистово плюсует</h2>
+<p>Знак <code>+</code> в консоли значит, что во введенной команде
+чего-то не хватает, и <code>R</code> ожидает продолжения.</p>
+<p>Один из самых частых случаев — потерялась закрывающая скобка.</p>
+<pre><code>&gt; sqrt(4
++
++
++
++</code></pre>
+<p>Для выхода из этого положения нажмите <code>Esc</code>.</p>
+</div>
+<div id="установка-пакетов" class="section level2 segue">
+<h2 class="segue">Установка пакетов</h2>
+<p>В.М.Хайтов, к.б.н.</p>
+</div>
+<div id="что-такое-пакеты" class="section level2">
+<h2>Что такое пакеты</h2>
+<p>Пакет - набор функций, предназначенных для решения определенного
+класса задач.</p>
+<p>Примеры пакетов:</p>
+<ul>
+<li><code>ggplot2</code> — набор функций для рисования графиков</li>
+<li><code>dplyr</code>, <code>tidyr</code> — средства управления данными
+и их преобразования в удобную форму</li>
+<li><code>car</code>, <code>MASS</code>, <code>lmer</code> — инструменты
+регрессионного анализа</li>
+</ul>
+</div>
+<div id="установка-пакетов-1" class="section level2">
+<h2>Установка пакетов</h2>
+<p>Установка пакетов происходит из Сети. Лучше работать, имея постоянное
+подключение.</p>
+<p>Главный репозиторий находится на сайте <code>CRAN</code> (<a
+href="https://cran.r-project.org/"
+class="uri">https://cran.r-project.org/</a>).</p>
+<p>Если вы работаете под Windows, то запускайте <code>RStudio</code> от
+имени администратора.</p>
+</div>
+<div id="выбор-зеркала" class="section level2">
+<h2>Выбор зеркала</h2>
+<p></p>
+<p>Из множества зеркал <code>CRAN</code> лучше выбрать ближайшее к
+вам.</p>
+<p>Tools -&gt; Global options -&gt; Packages -&gt; CRAN mirror</p>
+</div>
+<div id="установка-пакетов-в-r" class="section level2">
+<h2>Установка пакетов в <code>R</code></h2>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&#39;ggplot2&#39;</span>) <span class="co"># Устанавливаем пакет ggplot2 </span></span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&#39;tidyr&#39;</span>)   <span class="co"># Устанавливаем пакет tidyr </span></span></code></pre></div>
+<p>Пакеты достаточно один раз установить в локальную библиотеку.</p>
+<p>Команда <code>library()</code> активирует нужный пакет, если он уже
+установлен, и выполняется один раз за сеанс работы в R.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">library</span>(ggplot2) <span class="co"># Активируем пакет ggplot2</span></span></code></pre></div>
+</div>
+<div id="список-установленных-пакетов" class="section level2">
+<h2>Список установленных пакетов</h2>
+<p></p>
+<hr />
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
