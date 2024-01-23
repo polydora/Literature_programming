@@ -1,0 +1,15 @@
+---
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Использование языка R Markdown для постоения документов в формате Word
+
+- [Презентация]()
+- [Код для практики]()
+- [Подсказка по R Markdown на английском языке](https://www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf)
+- [Подсказка по R Markdown перевод](rmarkdown-cheatsheet_rus.pdf)

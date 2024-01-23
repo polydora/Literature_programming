@@ -11,8 +11,10 @@ navbar:
       href: Intro_to_R.html
     - text: "Построение графиков"
       href: ggplot.html
-    - text: "Создание документов"
-      href: rmarkdown.html      
+    - text: "Создание документов HTML"
+      href: rmarkdown_html.html      
+    - text: "Создание документов Word"
+      href: rmarkdown_word.html      
     - text: "О проекте"
       href: about.html
 output:
