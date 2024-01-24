@@ -1,0 +1,1230 @@
+---
+title: |
+  | Графики с использованием ggplot2
+author: |
+  | В.М. Хайтов, к.б.н.
+institute: Биологический факультет, СПбГУ
+fontsize: 10pt
+classoption: 'aspectratio=169,t,xcolor=table'
+language: russian, english
+output:
+  beamer_presentation:
+    theme: default
+    colortheme: beaver
+    latex_engine: xelatex
+    slide_level: 2
+    fig_crop: false
+    highlight: haddock
+    includes:
+      in_header: 
+        - includes/header.tex
+        - includes/header-with-code.tex
+    keep_tex: false
+---
+```{r setup, include=FALSE, cache=FALSE, purl=FALSE}
+# output options
+options(width = 70, scipen = 6, digits = 3)
+library (knitr)
+library (scales)
+# chunk default options
+opts_chunk$set(fig.show='hold', size='footnotesize', comment='#', 
+               fig.width=4.5, out.width='3in',
+               fig.height=2.25, out.height='1.5in',
+               cache=FALSE,
+               dev='cairo_pdf',
+               warning=FALSE, message=FALSE)
+# Тема для иллюстраций
+library (ggplot2)
+library (gridExtra)
+theme_spbu <- function () { 
+    theme_bw(base_size = 11, base_family='GT Eesti Pro Display') + 
+    theme(plot.title = element_text(face = 'bold', colour = '#1e1e1e'), 
+          panel.border = element_rect(fill = NA, size = 0.75), 
+          panel.grid = element_blank(),
+          strip.background = element_blank(), 
+          strip.text = element_text(face = 'bold', colour = '#1e1e1e'))
+}
+ar <- arrow(type = 'closed', length = unit(0.15,'cm'))
+arb <- arrow(type = 'closed', length = unit(0.15,'cm'), ends = 'both')
+op <- par()
+par_spbu <- par(
+    mar = c(3, 3, 2, 0.5), # Dist' from plot to side of page
+    mgp = c(2, 0.4, 0), # Dist' plot to label
+    las = 1, # Rotate y-axis text
+    tck = -.01, # Reduce tick length
+    xaxs = 'i', yaxs = 'i', 
+    family = 'GT Eesti Pro Display',
+    mex = 0.8,
+    mgp = c(2, .5, 0),
+    tcl = -0.3) # Remove plot padding
+source(file = 'includes/spbu_cols.R')
+source(file = 'includes/functions.R')
+```
+
+## Визуализация данных и результатов как инструмент  {.segue}
+
+В.М. Хайтов, к.б.н.
+
+\insertinstitute
+
+## Лучше один раз увидеть...
+
+\columnsbegin
+\column{0.48\textwidth}
+
+\includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{images/stock-photo-business-woman-with-colorful-graphs-and-charts-concepts-181869041.jpg}
+
+\tiny{https://www.shutterstock.com/ru/image-photo/business-woman-colorful-graphs-charts-concepts-181869041}
+
+
+\column{0.48 \textwidth}
+
+При обработке данных и построении моделей, описывающих взаимосвязи между явлениями, ключевым этапом является **визуализация**.
+
+Визуализация --- это представление информации в виде наглядного, легкого для восприятия рисунка.
+
+Визуализировать необходимо как исходные данные, так и результаты исследования. 
+
+
+\columnsend
+
+
+## Цифры VS Графики: Всему свое место!
+
+\centering
+Одни и те же данные, представленные по-разному:
+
+```{r, echo=FALSE}
+set.seed(49294)
+b0 <- 2
+b1 <- 0.5
+x <- runif(10, -1, 6)
+y <- b0 + b1 * x + rnorm(10, 0, 1)
+dfr <- data.frame(Size = x, Activity = y)
+Pl_model <- ggplot(data = dfr, aes(x = Size, y = Activity)) + geom_point(colour = spbu_cols('steelblue')) + geom_smooth(method = 'lm') + theme_spbu() + ggtitle('Связь между размером (Size) \nи активностью (Activity)') + theme(plot.title = element_text(hjust = 0.5))
+
+Model <- lm(Activity ~ Size, data = dfr)
+
+```
+
+
+\columnsbegin
+\column{0.48\textwidth}
+
+\begin{table}[ht]
+\small {\caption*{Параметры регрессионной модели, описывающей связь между размером (Size) и активностью (Activity). }}
+
+\footnotesize
+
+\centering
+\begin{tabular}{rrrrr}
+  \hline
+ & Estimate & Std. Error & t value & Pr($>$$|$t$|$) \\
+  \hline
+(Intercept) & 2.2806 & 0.4230 & 5.39 & 0.0007 \\
+  Size & 0.4066 & 0.1523 & 2.67 & 0.0283 \\
+   \hline
+\end{tabular}
+\end{table}
+
+
+\column{0.48 \textwidth}
+\vspace{0.5 cm}
+```{r, echo=FALSE, fig.width=3.75, out.width='2.5in'}
+Pl_model
+```
+
+
+\columnsend
+
+
+## Цифры VS Графики: Всему свое место!
+
+\columnsbegin
+\column{0.48\textwidth}
+
+
+\textbf{Цифровая презентация}
+\small
+  \begin{itemize}
+
+  \item Цифровое (табличное) представление данных требует больших затрат времени на изучение и осмысление. До читателя можно донести всю необходимую информацию.
+
+  \item Необходимо в тексте (статья, отчет, диплом), реже в постерном докладе.
+
+  \item Не годится для устного доклада.
+
+  \end{itemize}
+
+\column{0.48 \textwidth}
+
+
+\textbf{Визуальная презентация}
+  \small
+
+  \begin{itemize}
+  
+  \item Быстро воспринимается самая главная идея, заложенная в результате, которую необходимо донести до читателя. Менее значимые результаты могут быть опущены. 
+
+  \item Необходимо для устного и постерного доклада.
+
+  \item Крайне желательно в тексте (помимо таблицы).
+
+\end{itemize}
+
+
+\columnsend
+
+
+
+
+## Основы грамматики графиков  {.segue}
+
+В.М. Хайтов, к.б.н.
+
+\insertinstitute
+
+## Три системы визуализации в R
+
+\begin{itemize}
+  
+  \item Base Graphics
+  \item Lattice
+  \item ggplot2
+
+\end{itemize}
+
+## Система ggplot2
+
+Название пакета происходит от слов "Grammar", "Graphics", "Plot".
+
+В основе подхода, реализованного в пакете, лежит идея **грамматики графиков** "Semiology of Graphics" (Bertin, 1983).
+
+Более позднее обобщение “The Grammar of Graphics” (Wilkinson, Anand and Grossman, 2005).
+
+## Возможности ggplot2 практически безграничны
+
+\columnsbegin
+\column{0.7\textwidth}
+
+\includegraphics[width=\textwidth,height=0.8\textheight,keepaspectratio]{images/ggplot_examples.png}
+
+\column{0.3\textwidth}
+
+\tiny
+
+https://timogrossenbacher.ch/2016/12/beautiful-thematic-maps-with-ggplot2-only/
+
+http://www.ggplot2-exts.org/gallery/
+
+Khaitov et al, 2018
+
+\columnsend
+
+## График как аппликация
+
+\columnsbegin
+\column{0.48\textwidth}
+
+\includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{images/stock-photo-the-child-sticks-to-the-bow-greeting-card-for-mum-close-up-526386226.jpg}
+
+\tiny{https://www.shutterstock.com/ru/image-photo/child-sticks-bow-greeting-card-mum-526386226}
+
+
+\column{0.48 \textwidth}
+
+\vspace{0.2 cm}
+Построение графика в системе ggplot2 напоминает создание аппликации.
+
+Берется лист бумаги (базовый слой), на который слой за слоем наносятся новые элементы.
+
+\columnsend
+
+
+## Данные для визуализации. Вес новорожденных
+
+\columnsbegin
+
+\column{0.48\textwidth}
+
+\includegraphics[height=0.55\textheight,keepaspectratio]{./images/stock-photo-a-newly-born-child-gazes-at-the-camera-in-a-low-key-dramatic-setting-47693563.jpg}
+
+\tiny{https://www.shutterstock.com/image-photo/newly-born-child-gazes-camera-low-47693563}
+
+\column{0.48\textwidth}
+
+
+
+Переменные
+\scriptsize{
+\begin{itemize}
+\item \texttt{low}: имеет ли ребенок экстремально низкий вес
+\item \texttt{age}: возраст матери
+\item \texttt{lwt}: вес матери (в фунтах)
+\item \texttt{race}: раса матери (1 = white, 2 = black, 3 = other)
+\item \texttt{smoke}: курила ли мать во время беременности
+\item \texttt{ptl}: количество преждевременных родов в прошлом
+\item \texttt{ht}: были ли случаи повышенного давления
+\item \texttt{ui}: присутствие эрозии матки
+\item \texttt{ftv}: количество посещений врача в первом триместре
+\item \texttt{bwt}: вес ребенка при рождении
+
+\end{itemize}
+}
+
+Данные: Hosmer, Lemeshow, 1989
+
+\columnsend
+
+
+## Чтение данных
+
+```{r, eval=TRUE, echo=TRUE}
+library(MASS)
+baby <- birthwt # чтение встроенных данных
+
+```
+
+
+## Робот строит простейший график
+
+\columnsbegin
+
+\column{0.66\textwidth}
+
+```{r}
+library(ggplot2)
+ggplot()
+
+```
+
+
+\column{0.33\textwidth}
+
+\centering
+
+\includegraphics[width=\textwidth,height=0.3\textheight,keepaspectratio]{images/stock-vector-a-cartoon-illustration-of-a-malfunctioning-little-robot-223250488.jpg}
+
+\tiny{https://www.shutterstock.com/image-vector/cartoon-illustration-malfunctioning-little-robot-223250488}
+
+\footnotesize
+Робот, возьми лист бумаги
+
+\columnsend
+
+
+
+
+
+
+## Робот строит простейший график
+
+\columnsbegin
+
+\column{0.66\textwidth}
+
+```{r}
+ggplot(data = baby)
+
+```
+
+\column{0.33 \textwidth}
+
+\centering
+
+\includegraphics[width=\textwidth,height=0.3\textheight,keepaspectratio]{images/stock-vector-a-cartoon-illustration-of-a-malfunctioning-little-robot-223250488.jpg}
+
+
+\footnotesize
+Прочитай таблицу данных
+
+\columnsend
+
+
+
+
+
+## Робот строит простейший график
+
+\columnsbegin
+
+\column{0.66 \textwidth}
+
+```{r}
+ggplot(data = baby, aes(x = lwt, y = bwt))
+
+```
+
+\column{0.33 \textwidth}
+
+\centering
+
+\includegraphics[width=\textwidth,height=0.3\textheight,keepaspectratio]{images/stock-vector-a-cartoon-illustration-of-a-malfunctioning-little-robot-223250488.jpg}
+
+\footnotesize
+По оси OX отложи данные, записанные в переменной `lwt`
+
+По оси OY отложи данные, записанные в переменной `bwt`
+
+\columnsend
+
+
+
+
+## Робот строит простейший график
+
+\columnsbegin
+
+
+\column{0.66 \textwidth}
+
+```{r}
+ggplot(data = baby, aes(x = lwt, y = bwt)) + geom_point()
+
+```
+
+
+
+\column{0.33 \textwidth}
+
+\centering
+
+\includegraphics[width=\textwidth,height=0.3\textheight,keepaspectratio]{images/stock-vector-a-cartoon-illustration-of-a-malfunctioning-little-robot-223250488.jpg}
+
+
+\footnotesize
+Изобрази в виде точек исходные данные 
+
+
+\columnsend
+
+
+## Строим точечный график: geom_point()  {.segue}
+
+В.М. Хайтов, к.б.н.
+
+\insertinstitute
+
+## Простейший точечный график
+
+
+```{r}
+ggplot(data = baby, aes(x = lwt, y = bwt)) + geom_point()
+
+```
+
+
+Этот график можно изменить.
+
+## Изменим цвет точек
+
+```{r}
+ggplot(baby, aes(x = lwt, y = bwt)) + geom_point(colour = 'red')
+```
+
+
+
+## Изменим размер точек
+
+```{r}
+ggplot(baby, aes(x = lwt, y = bwt)) + geom_point(colour = 'red', size = 3)
+```
+
+## Изменим форму точек
+
+```{r}
+ggplot(baby, aes(x = lwt, y = bwt)) + geom_point(colour = 'red', size = 4, shape = 17)
+```
+
+
+
+
+## Три главные части графика в системе ggplot2
+
+\begin{itemize}
+\item Data --- \textbf{данные}, которые необходимо визуализировать. Обязательно должны быть представлены в виде датафрейма (tidy data!).
+
+\item Aesthetics --- эстетики, \textbf{что} из данных мы визуализируем и \textbf{чем} отражаем значения (координатами на осях OX и OY, цветовыми градациями, формой, размером и т.п.).
+
+\item Geom - геометрические фигуры, с помощью которых мы визуализируем результаты (точки, столбцы, линии и т.п.).
+
+\end{itemize}
+
+
+## Эстетики  {.segue}
+
+В.М. Хайтов, к.б.н.
+
+\insertinstitute
+
+## Какая еще  информация скрыта в датасете?
+
+\columnsbegin
+\column{0.6\textwidth}
+
+
+```{r, echo=FALSE}
+ggplot(baby, aes(x = lwt, y = bwt)) + geom_point()
+```
+
+\column{0.38 \textwidth}
+
+\small
+
+На графике приведена лишь информация о весе матери (ось OX) и весе ребенка (ось OY ).
+
+То, что мы отражаем (`эстетики`), описывает функция \newline `aes(x = lwt, y = bwt)`.
+
+\columnsend
+
+В датасете есть еще информация: 
+
+- Cтатус матери в отношении курения: курящая или некурящая.
+- Раса матери
+- Количество посещений врача, и т.п.
+
+
+
+## Подготовим данные для более наглядной визуализации
+
+```{r}
+# Переименуем градации дискретных факторов
+baby$smoke <- factor(baby$smoke, 
+                     levels = c(1, 0), 
+                     labels = c('Smoker', 'Non-smoker'))
+baby$race <- factor(baby$race, 
+                    levels = c(1, 2, 3),
+                    labels = c('White', 'Black', 'Other'))
+```
+
+## Вводим в график эстетику `colour`
+
+Изобразим разным цветом точки для курящих и некурящих матерей (эту информацию маркирует переменная `baby$smoke`)
+
+```{r}
+ggplot(baby, aes(x = lwt, y = bwt, colour = smoke)) + 
+  geom_point(size = 2, shape = 17) 
+# Важно! Вся информация о цвете точек теперь должна быть сосредоточена в функции aes()
+```
+
+
+
+## Вводим в график эстетику `shape`
+
+Отразим ту же информацию, но с помощью разных форм точек для курящих и некурящих матерей.
+
+```{r}
+ggplot(baby, aes(x = lwt, y = bwt, shape = smoke)) + 
+  geom_point(size = 2, colour = 'red') 
+# Важно! Вся информация о форме точек теперь должна быть сосредоточена в функции aes()
+```
+
+
+## Вводим еще одну эстетику -- `size`
+
+Отразим размером точки информацию о том, сколько раз в первом триместре женщина посещала врача (переменная `baby$ftv`)
+
+
+```{r}
+ggplot(baby, aes(x = lwt, y = bwt, colour = smoke, size = ftv)) + 
+  geom_point() + guides(size = guide_legend(ncol = 4))
+
+```
+
+
+
+## Управление эстетиками. Шкалы  {.segue}
+
+В.М. Хайтов, к.б.н.
+
+\insertinstitute
+
+## Меняем цветовые обозначения эстетики `colour`
+
+```{r}
+ggplot(baby, aes(x = lwt, y = bwt, colour = smoke)) + 
+  geom_point(size = 2, shape = 17) +  
+    scale_colour_manual(values = c('blue', 'red'))
+```
+
+С помощью функций семейства `scale_` можно регулировать форму, цвет заливки, размер и т. д.  
+
+
+## Цветовая схема Синтии Брюэр (Cynthia A. Brewer)
+
+\columnsbegin
+\column{0.6\textwidth}
+
+```{r}
+ggplot(baby, aes(x = lwt, y = bwt, colour = smoke)) + 
+  geom_point(size = 2, shape = 17) +  
+  scale_colour_brewer(palette = 'Set1')
+```
+
+\column{0.35 \textwidth}
+
+\begin{itemize}
+\item Эта схема разработана в ходе исследования, посвещенного сочетаемости цветов.
+\item Есть много встроенных палитр для визуализации как дискретных, так и непрерывных данных.
+\item Учитывает права 8-10\% мужчин, несущих в X-хромосоме мутантные гены.
+\end{itemize}
+
+\columnsend
+
+
+
+
+## Фасетирование  {.segue}
+
+В.М. Хайтов, к.б.н.
+
+\insertinstitute
+
+## Проблема большого количества эстетик
+
+При большом количестве эстетик график может не читаться
+
+```{r}
+ggplot(baby, aes(x = lwt, y = bwt, colour = smoke, shape = race)) + 
+  geom_point(size = 2) +  
+  scale_colour_brewer(palette = 'Set1') 
+```
+
+Выход --- фасетирование
+
+
+## Одна фасетирующая переменная
+
+
+```{r}
+ggplot(baby, aes(x = lwt, y = bwt, colour = smoke, shape = race)) + 
+  geom_point(size = 2) +  
+  scale_colour_brewer(palette = 'Set1') +
+  facet_wrap(~race, nrow = 1)
+
+```
+
+
+
+## Две фасетирующие переменные
+
+```{r}
+ggplot(baby, aes(x = lwt, y = bwt, colour = smoke, shape = race)) + 
+  geom_point(size = 2) +  
+  scale_colour_brewer(palette = 'Set1') +
+  facet_grid(smoke~race)
+```
+
+
+
+
+## Сохранение графиков в переменные  {.segue}
+
+В.М. Хайтов, к.б.н.
+
+\insertinstitute
+
+## Пошаговое наслоение элементов на переменную
+
+Создаем переменную с базовым слоем
+
+```{r}
+My_plot <- ggplot(baby, aes(x = lwt, y = bwt))
+```
+
+Добавляем новые слои 
+
+```{r}
+My_plot_2 <- My_plot + geom_point(colour = 'red')
+My_plot_2
+```
+
+## Меняем подписи осей
+
+```{r}
+My_plot_3 <- My_plot_2 + labs(x = 'Вес матери (фунты)', y = 'Вес ребенка (г)')
+My_plot_3
+```
+
+
+## Добавляем заголовок графика
+
+```{r}
+My_plot_4 <- My_plot_3 + ggtitle('Соотношение веса матери и \nвеса новорожденного ребенка')
+My_plot_4
+```
+
+
+
+
+
+
+
+## Темы оформления в ggplot2  {.segue}
+
+В.М. Хайтов, к.б.н.
+
+\insertinstitute
+
+
+
+## Требований много, а ggplot2 один...
+
+В разных журналах, ВУЗах и прочих коллективах требования к оформлению графиков разные. 
+
+Вкусы у авторов тоже разные.
+
+Для регуляции внешнего вида графика используется настройка **темы**.
+
+
+## Некоторые встроенные темы в ggplot2 
+
+```{r}
+Them_1 <- My_plot_2 + theme_gray() + ggtitle('theme_gray')
+
+Them_2 <- My_plot_2 + theme_bw() + ggtitle('theme_bw')
+
+Them_3 <- My_plot_2 + theme_classic() + ggtitle('theme_classic')
+
+Them_4 <- My_plot_2 + theme_dark() + ggtitle('theme_dark')
+
+```
+
+
+## Некоторые встроенные темы в ggplot2 
+```{r fig.height=3.38, out.height='2.25in'}
+library(gridExtra)
+grid.arrange(Them_1, Them_2, Them_3, Them_4, ncol = 2)
+```
+
+
+
+
+
+## Управление элементами графика   {.segue}
+
+В.М. Хайтов, к.б.н.
+
+\insertinstitute
+
+## Функция `theme()`
+
+Эта функция регулирует характеристики всех элементов графика. 
+
+Наиболее часто приходится регулировать:   
+- форму осей   
+- фон графика   
+- формат подписи осей   
+- формат цифровой информации на осях.
+
+
+
+## Уменьшаем размер чисел на осях графика
+
+```{r}
+My_plot_2 + theme_bw() + theme(axis.text = element_text(size = 4))
+```
+
+
+## Увеличиваем размер чисел на осях графика
+
+```{r}
+My_plot_2 + theme_bw() + theme(axis.text = element_text(size = 14))
+```
+
+## Регулируем угол наклона чисел на осях графика
+
+
+```{r}
+My_plot_2 + theme_bw() + theme(axis.text.x = element_text(angle = 45, colour = 'blue'))
+```
+
+
+## Убираем сетку внутри графика
+
+
+```{r}
+My_plot_2 + theme_bw() + 
+  theme(axis.text.x = element_text(angle = 45, colour = 'blue'),
+        panel.grid = element_blank())
+```
+
+## Меняем положение легенды
+
+
+```{r}
+ggplot(baby, aes(x = lwt, y = bwt, colour = smoke)) + 
+  geom_point() + 
+  theme_bw() + 
+  theme(axis.text.x = element_text(angle = 45, colour = 'blue'),
+        panel.grid = element_blank())
+```
+
+
+## Меняем положение легенды
+
+
+```{r}
+ggplot(baby, aes(x = lwt, y = bwt, colour = smoke)) + 
+  geom_point() + 
+  theme_bw()  + 
+  theme(axis.text.x = element_text(angle = 45, colour = 'blue'),
+        panel.grid = element_blank(),
+        legend.position = 'bottom')
+```
+
+
+## Меняем положение легенды
+
+```{r}
+ggplot(baby, aes(x = lwt, y = bwt, colour = smoke)) + 
+  geom_point() + 
+  theme_bw()  + 
+  theme(axis.text.x = element_text(angle = 45, colour = 'blue'),
+        panel.grid = element_blank(),
+        legend.position = c(0.85, 0.3),
+        legend.background = element_rect(fill = 'lightblue'))
+```
+
+## Создаем финальный рисунок 
+
+
+<!-- \small -->
+```{r My_final_plot}
+My_final_plot <- ggplot(baby, aes(x = lwt, y = bwt)) +  # задаем базовый слой 
+  geom_point(aes(colour = smoke)) +   # предсталяем результаты в виде точек 
+  labs(x = 'Вес матери (фунты)',     # подписываем ось OX
+       y = 'Вес ребенка (г)',        # подписываем ось OY
+       colour = 'Курение матери:' ) + # подписываем заголовок легенды
+  ggtitle('Соотношение веса матери и ребенка') +   # заголовок
+  scale_colour_manual(values = c('blue', 'red')) +  # меняем цвет для эстетики colour
+  theme_bw()  +                                    # устанавливаем тему 
+  theme(panel.grid = element_blank(),              # убираем сетку
+        legend.position = 'bottom',                # указываем положение легенды
+        plot.title = element_text(hjust = 0.5))    # выравниваем заголовок по центру
+
+```
+
+
+
+## Итоговый рисунок 
+
+```{r}
+My_final_plot
+```
+
+
+
+
+## Визуализация частотных распределений  {.segue}
+
+В.М. Хайтов, к.б.н.
+
+\insertinstitute
+
+## Частотное распределение
+
+```{r}
+ggplot(baby, aes(x = bwt)) + geom_histogram() + theme_bw()
+```
+
+## Меняем классовый шаг
+
+```{r}
+ggplot(baby, aes(x = bwt)) + geom_histogram(binwidth = 50) + theme_bw()
+```
+
+## Меняем классовый шаг
+
+```{r}
+ggplot(baby, aes(x = bwt)) + geom_histogram(binwidth = 500) + theme_bw()
+```
+
+
+## Применяем эстетику `fill`
+
+```{r}
+ggplot(baby, aes(x = bwt)) + geom_histogram(binwidth = 500, aes(fill = smoke)) + 
+  theme_bw()
+```
+
+Читать неудобно! 
+
+
+## Фасетируем рисунок
+
+```{r }
+ggplot(baby, aes(x = bwt)) + geom_histogram(binwidth = 500, aes(fill = smoke)) + 
+  theme_bw() +
+  facet_wrap(~smoke, nrow = 2)
+```
+
+## Использование анализа, основанного на оценке ядерной плотности (kernel density)
+
+```{r}
+ggplot(baby, aes(x = bwt)) + 
+  geom_density(aes(fill = smoke), alpha = 0.5) + 
+  theme_bw()
+```
+
+Становится видна некоторая тенденция.
+
+
+## geom_violin()
+
+```{r}
+ggplot(baby, aes(x = smoke, y = bwt)) + 
+  geom_violin(aes(fill = smoke)) + 
+  theme_bw()
+
+```
+
+
+## Визуализация данных с простейшей статистической обработкой {.segue}
+
+В.М. Хайтов, к.б.н.
+
+\insertinstitute
+
+
+## Средний вес ребенка у матерей разного возраста
+
+```{r}
+ggplot(baby, aes(x = age, y = bwt, colour = smoke)) + 
+  stat_summary(fun.y = mean, geom = 'line') +
+  theme_bw()
+
+```
+
+
+## Тенденции зависимости веса ребенка от возраста матери
+
+
+```{r}
+ggplot(baby, aes(x = age, y = bwt, colour = smoke)) + geom_point() +
+  stat_smooth(method = 'lm') +
+  theme_bw()
+
+```
+
+
+
+## Усы, отражающие интервалы
+
+
+```{r}
+
+ggplot(baby, aes(x = smoke, y = bwt)) + 
+  stat_summary(fun.y = mean, geom = 'bar', fill = 'gray', colour = 'black') + 
+  stat_summary(fun.data = mean_se, geom = 'errorbar',  width = 0.2) + 
+  theme_bw()
+
+```
+
+
+
+
+
+## Сохранение графиков в виде файлов  {.segue}
+
+В.М. Хайтов, к.б.н.
+
+\insertinstitute
+
+
+## Сохранение графика в файл с помощью RStudio
+
+ \includegraphics[height=0.7\textheight,keepaspectratio]{./images/Rstudio_save_plot_Ira.png}
+
+
+## Сохранение графика в файл с помощью RStudio
+
+ \includegraphics[height=0.7\textheight,keepaspectratio]{./images/RStudio_save_plot_zoom_Ira.png}
+
+
+## Сохранение графика в файл с помощью средств ggplot2
+
+Создаем график
+
+
+```{r, eval=FALSE}
+
+Plot_to_save <- ggplot(baby, aes(x = smoke, y = bwt)) +
+  stat_summary(fun.y = 'mean', geom = 'bar', fill = 'gray', colour = 'black') +
+  stat_summary(fun.data = mean_se, geom = 'errorbar',  width = 0.2) +
+  theme_bw()
+
+```
+
+
+
+
+## Сохранение графика в файл с помощью средств ggplot2
+
+Сохраняем график в растровом формате
+
+```{r, eval=FALSE}
+
+ggsave('c:/My_draw.jpg', Plt_to_save) # сохраняем в растровом формате .jpg
+
+ggsave('c:/My_draw.png', Plot_to_save) # сохраняем в растровом формате .png
+
+```
+
+
+
+## Сохранение графика в файл с помощью средств ggplot2
+
+Сохраняем график в векторном формате
+
+```{r, eval=FALSE}
+
+ggsave('c:/My_draw.pdf', Plot_to_save) # сохраняем в формате .pdf
+
+ggsave('c:/My_draw.wmf', Plot_to_save) # сохраняем в векторном формате .wmf
+
+ggsave('c:/My_draw.eps', Plot_to_save) # сохраняем в векторном формате .eps
+
+
+```
+
+
+
+
+## Литературное программирование  {.segue}
+
+В.М. Хайтов, к.б.н.
+
+\insertinstitute
+
+
+## Для исполнителей
+
+\columnsbegin
+\column{0.48\textwidth}
+
+ \includegraphics[height=0.6\textheight,keepaspectratio]{./images/stock-photo-angry-boss-standing-opposite-his-secretary-631514021.jpg}
+
+\column{0.48 \textwidth}
+
+Вы создали презентацию, написали текст статьи или отчета.
+
+Начальнику не понравилась форма графиков, цвет заливки, величина шрифта и т. п...
+
+В дополнение коллеги принели вам исправленные файлы с первичными данными...
+
+Все документы надо срочно переделывать...
+
+\columnsend
+
+\centering
+Выход из этого кошмара --- создание RMD-документа.
+
+
+## Для пользователей разных платформ
+
+
+\columnsbegin
+\column{0.48\textwidth}
+
+ \includegraphics[height=0.6\textheight,keepaspectratio]{./images/stock-photo-moscow-russia-december-road-signs-with-top-brand-operating-system-logos-android-mac-770756293.jpg}
+
+\column{0.48 \textwidth}
+
+Ваши коллеги работают под Linux и Windows, а вы предпочитаете Mac OS.
+
+Продукт вашего совместного творчества должен читаться на любом компьютере. 
+
+\columnsend
+
+\centering
+
+Основа плодотворного сотрудничества --- работа с RMD-документами.
+
+
+
+
+## Для исследователей 
+
+
+\columnsbegin
+\column{0.48\textwidth}
+
+ \includegraphics[height=0.6\textheight,keepaspectratio]{./images/stock-photo-businessman-interacting-with-a-hud-interface-against-a-blurred-blue-background-graphs-toned-image-1017564916.jpg}
+
+\column{0.48 \textwidth}
+
+Вы ученый-иследователь. 
+
+В статьях, которые вы читаете, видна лишь вершина айсберга: характер данных, процедуры анализа, способ построения таблиц и графиков остаются в тени.
+
+Вас не оставляет чувство сомнения в правоте автора статьи, так как нет возможности воспроизвести  те действия с данными, которые произвел автор.
+
+
+\columnsend
+
+\centering
+
+Выход из этого --- стать сторонником идеи **Reproducible research** 
+
+## Reproducible research
+
+Воспроизводимое исследование --- это анализ, который может быть воспроизведен на основе тех же данных любым другим исследователем. 
+
+Воспроизводимое исследование не надо путать с воспроизводимостью результатов!
+
+
+## Reproducible research
+
+\textbf{Критерии воспроизводимого исследования}
+
+\begin{enumerate}
+  \item Исходные данные (raw data) доступны любому читателю-потребителю (в идеале, публично доступны).
+  \item Все методы анализа полностью описаны.
+  \item Весь процесс анализа исходных данных (от чтения данных до финального результата) полностью описан и сохранен в виде некоторого текста (кода анализа).
+
+\end{enumerate}
+
+\centering
+Лучшее средство для представления своих результатов как воспроизводимого исследования --- это создание RMD-документов. 
+
+
+
+
+## Создание RMD-документа  {.segue}
+
+В.М. Хайтов, к.б.н.
+
+\insertinstitute
+
+
+<!--## Первый шаг
+
+
+ \includegraphics[height=0.7\textheight,keepaspectratio]{./images/RMD_step_1.png}-->
+
+
+
+## R Markdown
+
+\columnsbegin
+\column{0.6\textwidth}
+
+ \includegraphics[height=0.7\textheight,keepaspectratio]{./images/RMD_step_1_Ira.png}
+
+\column{0.4\textwidth}
+
+RMD-документы --- это документы, созданные с использованием языка разметки R Markdown.
+
+\columnsend
+
+## Документ или презентация
+
+ \includegraphics[height=0.7\textheight,keepaspectratio]{./images/RMD_step_2_Ira.png}
+
+
+## Внешний вид RMD-документа
+
+ \includegraphics[height=0.7\textheight,keepaspectratio]{./images/RMD_step_3_Ira.png}
+
+## Создание итогового документа
+
+Текст RMD-документа передается функции `knit()` из пакета `knitr`.
+
+Эта функция создает итоговый документ в том формате, который указан в заголовке RMD-документа (html, pdf, docx).
+
+## Чанки
+
+\columnsbegin
+\column{0.6\textwidth}
+
+ \includegraphics[height=0.7\textheight,keepaspectratio]{./images/RMD_step_3_Ira.png}
+
+\column{0.4\textwidth}
+
+Чанк --- это исполняемый код, встроенный в текст.
+
+Вставка чанка в RStudio: Ctrl+Alt+I
+
+
+
+\columnsend
+
+
+
+
+## Пример RMD-документа
+
+ \includegraphics[height=0.7\textheight,keepaspectratio]{./images/RMD_example_Ira.png}
+
+
+## Результат работы `knitr` в окне браузера
+
+\columnsbegin
+\column{0.6\textwidth}
+
+ \includegraphics[height=0.7\textheight,keepaspectratio]{./images/RMD_browser_view.png}
+
+
+\column{0.4\textwidth}
+
+
+В результате работы `knitr` появляется html-файл, который можно просмотреть в обычном браузере.
+
+
+\columnsend
+
+
+## Параметры чанков
+
+ \includegraphics[height=0.7\textheight,keepaspectratio]{./images/RMD_chunk_parameters_Ira.png}
+
+
+## Результат работы `knitr` с новыми параметрами чанка
+
+ \includegraphics[height=0.7\textheight,keepaspectratio]{./images/RMD_browser_view_2.png}
+
+
+## Наиболее важные параметры чанка
+
+
+- `echo` --- Приводить ли код из чанка в документе, который получится в результате работы `knitr`
+- `eval` --- Запускать ли код, приведенный в чанке
+- `fig.` --- Набор параметров для регуляции положения и размера рисунков 
+- `warning` --- Выводить ли в итоговый документ предупреждающие сообщения функций
+
+## Что мы знаем и что будет дальше
+
+В.М. Хайтов, к.б.н.
+
+\insertinstitute
+
+## Что мы знаем
+
+При помощи пакета `ggplot2` можно создавать графики практически любой сложности.
+
+Результаты анализа удобно представлять в виде .Rmd документов.
+
+Создание отчетов в .Rmd поможет сделать результаты воспроизводимыми и легко адаптироваться к изменениям в исходных данных или к новым данным.
+
+## Что будет дальше
+
+Сейчас мы разобрали только самыме основы пакета `ggplot2`. В следующих модулях мы еще не раз будем обращаться к его возможностям для визуализации результатов статистического анализа.
+
+Вы сможете попрактиковаться в создании документов в формате .Rmd, работая над проектами в курсах нашей специализации.
+
+
+## Используемые источники
+
+\small
+
+https://www.shutterstock.com/ru/image-photo/child-sticks-bow-greeting-card-mum-526386226
+https://www.shutterstock.com/image-photo/newly-born-child-gazes-camera-low-47693563
+https://www.shutterstock.com/image-vector/cartoon-illustration-malfunctioning-little-robot-223250488
+https://timogrossenbacher.ch/2016/12/beautiful-thematic-maps-with-ggplot2-only/    http://www.ggplot2-exts.org/gallery/   
+
+Khaitov V. et al. (2018) Biol. Bull. 234
+
+Hosmer, D.W. and Lemeshow, S. (1989) Applied Logistic Regression. New York: Wiley
+
+----
